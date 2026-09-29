@@ -1,9 +1,8 @@
 public import Byte
 public import Coder
 public import Cursor
-public import Cursor_Standard_Library_Integration
 public import RFC_9293
-import Binary_Serializable
+import Binary
 import Parser
 import Serializer
 
@@ -13,7 +12,7 @@ extension RFC_9293.Segment {
 
         public typealias Output = RFC_9293.Segment
 
-        public typealias Failure = RFC_9293.Segment.Failure
+        public typealias Failure = RFC_9293.Segment.Error
 
         public init() {}
 
@@ -21,7 +20,7 @@ extension RFC_9293.Segment {
             let start = input.checkpoint
 
             let header: RFC_9293.`3`.`1`.Header
-            do throws(RFC_9293.`3`.`1`.Header.Failure) {
+            do throws(RFC_9293.`3`.`1`.Header.Error) {
                 header = try RFC_9293.`3`.`1`.Header.Coder<Input, Buffer>().parse(&input)
             } catch {
                 input.seek(to: start)

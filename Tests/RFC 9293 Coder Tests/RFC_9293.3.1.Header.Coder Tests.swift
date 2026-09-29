@@ -1,7 +1,7 @@
 import Byte
 import Coder
-import Coder_Standard_Library_Integration
-import Cursor_Standard_Library_Integration
+import Coder
+import Cursor
 import Parser
 import RFC_9293
 import RFC_9293_Coder
@@ -60,7 +60,7 @@ struct `RFC_9293.3.1.Header.Coder Tests` {
     @Test
     func `rejects a header shorter than twenty octets and restores the cursor`() {
         var input = bytes(0x1F, 0x90, 0x00, 0x50)[...]
-        #expect(throws: RFC_9293.`3`.`1`.Header.Failure.insufficientBytes) {
+        #expect(throws: RFC_9293.`3`.`1`.Header.Error.insufficientBytes) {
             try RFC_9293.`3`.`1`.Header.coder.parse(&input)
         }
         #expect(input.count == 4)
@@ -79,7 +79,7 @@ struct `RFC_9293.3.1.Header.Coder Tests` {
             0x00, 0x00
         )[...]
 
-        #expect(throws: RFC_9293.`3`.`1`.Header.Failure.dataOffsetTooSmall) {
+        #expect(throws: RFC_9293.`3`.`1`.Header.Error.dataOffsetTooSmall) {
             try RFC_9293.`3`.`1`.Header.coder.parse(&input)
         }
         #expect(input.count == 20)

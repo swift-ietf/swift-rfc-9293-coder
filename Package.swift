@@ -22,36 +22,31 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-cursor.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-serializer.git", branch: "main"),
-        .package(
-            url: "https://github.com/swift-molecules/swift-binary-serializer.git",
-            branch: "main"
-        ),
         .package(url: "https://github.com/swift-ietf/swift-rfc-9293.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-binary.git", branch: "main", traits: ["Serializer"]),
     ],
     targets: [
         .target(
             name: "RFC 9293 Coder",
             dependencies: [
-                .product(name: "Binary Serializable", package: "swift-binary-serializer"),
                 .product(name: "Byte", package: "swift-byte"),
                 .product(name: "Coder", package: "swift-coder"),
                 .product(name: "Cursor", package: "swift-cursor"),
-                .product(name: "Cursor Standard Library Integration", package: "swift-cursor"),
+                .product(name: "Cursor", package: "swift-cursor"),
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "RFC 9293", package: "swift-rfc-9293"),
                 .product(name: "Serializer", package: "swift-serializer"),
+                .product(name: "Binary", package: "swift-binary"),
             ]
         ),
         .testTarget(
             name: "RFC 9293 Coder Tests",
             dependencies: [
                 "RFC 9293 Coder",
-                .product(name: "Binary Serializable", package: "swift-binary-serializer"),
                 .product(name: "Byte", package: "swift-byte"),
-                .product(name: "Byte Standard Library Integration", package: "swift-byte"),
                 .product(name: "Coder", package: "swift-coder"),
-                .product(name: "Coder Standard Library Integration", package: "swift-coder"),
-                .product(name: "Cursor Standard Library Integration", package: "swift-cursor"),
+                .product(name: "Coder", package: "swift-coder"),
+                .product(name: "Cursor", package: "swift-cursor"),
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "RFC 9293", package: "swift-rfc-9293"),
                 .product(name: "Serializer", package: "swift-serializer"),

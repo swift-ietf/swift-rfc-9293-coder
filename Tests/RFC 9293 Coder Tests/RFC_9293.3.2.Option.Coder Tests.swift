@@ -1,7 +1,7 @@
 import Byte
 import Coder
-import Coder_Standard_Library_Integration
-import Cursor_Standard_Library_Integration
+import Coder
+import Cursor
 import Parser
 import RFC_9293
 import RFC_9293_Coder
@@ -73,7 +73,7 @@ struct `RFC_9293.3.2.Option.Coder Tests` {
     @Test
     func `an option whose declared length is wrong is rejected and the cursor restored`() {
         var input = bytes(0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)[...]
-        #expect(throws: RFC_9293.`3`.`2`.Option.Failure.invalidLength) {
+        #expect(throws: RFC_9293.`3`.`2`.Option.Error.invalidLength) {
             try RFC_9293.`3`.`2`.Option.coder.parse(&input)
         }
         #expect(input.count == 8)
@@ -82,7 +82,7 @@ struct `RFC_9293.3.2.Option.Coder Tests` {
     @Test
     func `an option that runs out of octets is rejected and the cursor restored`() {
         var input = bytes(0x02, 0x04, 0x05)[...]
-        #expect(throws: RFC_9293.`3`.`2`.Option.Failure.insufficientBytes) {
+        #expect(throws: RFC_9293.`3`.`2`.Option.Error.insufficientBytes) {
             try RFC_9293.`3`.`2`.Option.coder.parse(&input)
         }
         #expect(input.count == 3)

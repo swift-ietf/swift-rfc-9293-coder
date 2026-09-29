@@ -1,7 +1,7 @@
 import Byte
 import Coder
-import Coder_Standard_Library_Integration
-import Cursor_Standard_Library_Integration
+import Coder
+import Cursor
 import Parser
 import RFC_9293
 import RFC_9293_Coder
@@ -23,7 +23,7 @@ struct `RFC_9293.SequenceNumber.Coder Tests` {
     @Test
     func `rejects fewer than four octets and restores the cursor`() {
         var input = bytes(0x00, 0x01, 0x02)[...]
-        #expect(throws: RFC_9293.SequenceNumber.Failure.insufficientBytes) {
+        #expect(throws: RFC_9293.SequenceNumber.Error.insufficientBytes) {
             try RFC_9293.SequenceNumber.coder.parse(&input)
         }
         #expect(input.count == 3)

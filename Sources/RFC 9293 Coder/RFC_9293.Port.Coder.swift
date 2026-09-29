@@ -1,9 +1,8 @@
 public import Byte
 public import Coder
 public import Cursor
-public import Cursor_Standard_Library_Integration
 public import RFC_9293
-import Binary_Serializable
+import Binary
 import Parser
 import Serializer
 
@@ -13,7 +12,7 @@ extension RFC_9293.Port {
 
         public typealias Output = RFC_9293.Port
 
-        public typealias Failure = RFC_9293.Port.Failure
+        public typealias Failure = RFC_9293.Port.Error
 
         public init() {}
 

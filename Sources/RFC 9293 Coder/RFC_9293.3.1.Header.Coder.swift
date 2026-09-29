@@ -1,9 +1,8 @@
 public import Byte
 public import Coder
 public import Cursor
-public import Cursor_Standard_Library_Integration
 public import RFC_9293
-import Binary_Serializable
+import Binary
 import Parser
 import Serializer
 
@@ -13,46 +12,64 @@ extension RFC_9293.`3`.`1`.Header {
 
         public typealias Output = RFC_9293.`3`.`1`.Header
 
-        public typealias Failure = RFC_9293.`3`.`1`.Header.Failure
+        public typealias Failure = RFC_9293.`3`.`1`.Header.Error
 
         public init() {}
 
         public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
             let start = input.checkpoint
 
-            var fixed: [Byte] = []
-            fixed.reserveCapacity(RFC_9293.minimumHeaderSize)
-            for _ in 0..<RFC_9293.minimumHeaderSize {
-                guard let byte = input.next() else {
+            func sixteen() throws(Failure) -> UInt16 {
+                guard let high = input.next(), let low = input.next() else {
                     input.seek(to: start)
                     throw .insufficientBytes
                 }
-                fixed.append(byte)
+                return UInt16(high.bitPattern) << 8 | UInt16(low.bitPattern)
             }
 
-            func sixteen(at index: Int) -> UInt16 {
-                UInt16(fixed[index].bitPattern) << 8 | UInt16(fixed[index + 1].bitPattern)
+            let sourcePort: RFC_9293.Port
+            let destinationPort: RFC_9293.Port
+            do throws(RFC_9293.Port.Error) {
+                sourcePort = try RFC_9293.Port.Coder<Input, Buffer>().parse(&input)
+                destinationPort = try RFC_9293.Port.Coder<Input, Buffer>().parse(&input)
+            } catch {
+                input.seek(to: start)
+                throw .insufficientBytes
             }
 
-            func thirtyTwo(at index: Int) -> UInt32 {
-                UInt32(fixed[index].bitPattern) << 24
-                    | UInt32(fixed[index + 1].bitPattern) << 16
-                    | UInt32(fixed[index + 2].bitPattern) << 8
-                    | UInt32(fixed[index + 3].bitPattern)
+            let sequenceNumber: RFC_9293.SequenceNumber
+            let acknowledgmentNumber: RFC_9293.SequenceNumber
+            do throws(RFC_9293.SequenceNumber.Error) {
+                sequenceNumber = try RFC_9293.SequenceNumber.Coder<Input, Buffer>().parse(&input)
+                acknowledgmentNumber = try RFC_9293.SequenceNumber.Coder<Input, Buffer>().parse(&input)
+            } catch {
+                input.seek(to: start)
+                throw .insufficientBytes
             }
 
             let dataOffset: RFC_9293.`3`.`1`.DataOffset
             do throws(RFC_9293.`3`.`1`.DataOffset.Error) {
-                dataOffset = try RFC_9293.`3`.`1`.DataOffset(
-                    rawValue: fixed[12].bitPattern >> 4
-                )
+                dataOffset = try RFC_9293.`3`.`1`.DataOffset.Coder<Input, Buffer>().parse(&input)
             } catch {
                 input.seek(to: start)
                 switch error {
+                case .insufficientBytes: throw .insufficientBytes
                 case .valueTooSmall, .notAligned: throw .dataOffsetTooSmall
                 case .valueTooLarge: throw .dataOffsetTooLarge
                 }
             }
+
+            let flags: RFC_9293.`3`.`1`.Flags
+            do throws(RFC_9293.`3`.`1`.Flags.Error) {
+                flags = try RFC_9293.`3`.`1`.Flags.Coder<Input, Buffer>().parse(&input)
+            } catch {
+                input.seek(to: start)
+                throw .insufficientBytes
+            }
+
+            let window = try sixteen()
+            let checksum = try sixteen()
+            let urgentPointer = try sixteen()
 
             var options: [Byte] = []
             options.reserveCapacity(dataOffset.optionsLength)
@@ -65,15 +82,15 @@ extension RFC_9293.`3`.`1`.Header {
             }
 
             return RFC_9293.`3`.`1`.Header(
-                sourcePort: RFC_9293.Port(sixteen(at: 0)),
-                destinationPort: RFC_9293.Port(sixteen(at: 2)),
-                sequenceNumber: RFC_9293.SequenceNumber(rawValue: thirtyTwo(at: 4)),
-                acknowledgmentNumber: RFC_9293.SequenceNumber(rawValue: thirtyTwo(at: 8)),
+                sourcePort: sourcePort,
+                destinationPort: destinationPort,
+                sequenceNumber: sequenceNumber,
+                acknowledgmentNumber: acknowledgmentNumber,
                 dataOffset: dataOffset,
-                flags: RFC_9293.`3`.`1`.Flags(rawValue: fixed[13].bitPattern),
-                window: sixteen(at: 14),
-                checksum: sixteen(at: 16),
-                urgentPointer: sixteen(at: 18),
+                flags: flags,
+                window: window,
+                checksum: checksum,
+                urgentPointer: urgentPointer,
                 options: options
             )
         }

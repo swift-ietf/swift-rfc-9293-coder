@@ -1,7 +1,7 @@
 import Byte
 import Coder
-import Coder_Standard_Library_Integration
-import Cursor_Standard_Library_Integration
+import Coder
+import Cursor
 import Parser
 import RFC_9293
 import RFC_9293_Coder
@@ -37,7 +37,7 @@ struct `RFC_9293.Segment.Coder Tests` {
     @Test
     func `a segment shorter than a header is rejected and the cursor restored`() {
         var input = bytes(0x1F, 0x90)[...]
-        #expect(throws: RFC_9293.Segment.Failure.insufficientBytes) {
+        #expect(throws: RFC_9293.Segment.Error.insufficientBytes) {
             try RFC_9293.Segment.coder.parse(&input)
         }
         #expect(input.count == 2)
@@ -56,7 +56,7 @@ struct `RFC_9293.Segment.Coder Tests` {
             0x00, 0x00
         )[...]
 
-        #expect(throws: RFC_9293.Segment.Failure.invalidDataOffset) {
+        #expect(throws: RFC_9293.Segment.Error.invalidDataOffset) {
             try RFC_9293.Segment.coder.parse(&input)
         }
         #expect(input.count == 20)

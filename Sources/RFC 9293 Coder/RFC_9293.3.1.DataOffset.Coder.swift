@@ -1,9 +1,8 @@
 public import Byte
 public import Coder
 public import Cursor
-public import Cursor_Standard_Library_Integration
 public import RFC_9293
-import Binary_Serializable
+import Binary
 import Parser
 import Serializer
 
@@ -13,7 +12,7 @@ extension RFC_9293.`3`.`1`.DataOffset {
 
         public typealias Output = RFC_9293.`3`.`1`.DataOffset
 
-        public typealias Failure = RFC_9293.`3`.`1`.DataOffset.Failure
+        public typealias Failure = RFC_9293.`3`.`1`.DataOffset.Error
 
         public init() {}
 
@@ -22,14 +21,11 @@ extension RFC_9293.`3`.`1`.DataOffset {
             guard let byte = input.next() else {
                 throw .insufficientBytes
             }
-            do throws(RFC_9293.`3`.`1`.DataOffset.Error) {
+            do throws(Failure) {
                 return try RFC_9293.`3`.`1`.DataOffset(rawValue: byte.bitPattern >> 4)
             } catch {
                 input.seek(to: start)
-                switch error {
-                case .valueTooSmall, .notAligned: throw .valueTooSmall
-                case .valueTooLarge: throw .valueTooLarge
-                }
+                throw error
             }
         }
 

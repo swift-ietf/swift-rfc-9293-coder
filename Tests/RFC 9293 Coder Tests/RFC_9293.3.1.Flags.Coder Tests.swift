@@ -1,7 +1,7 @@
 import Byte
 import Coder
-import Coder_Standard_Library_Integration
-import Cursor_Standard_Library_Integration
+import Coder
+import Cursor
 import Parser
 import RFC_9293
 import RFC_9293_Coder
@@ -26,7 +26,7 @@ struct `RFC_9293.3.1.Flags.Coder Tests` {
     @Test
     func `rejects empty input`() {
         var input = bytes()[...]
-        #expect(throws: RFC_9293.`3`.`1`.Flags.Failure.insufficientBytes) {
+        #expect(throws: RFC_9293.`3`.`1`.Flags.Error.insufficientBytes) {
             try RFC_9293.`3`.`1`.Flags.coder.parse(&input)
         }
     }

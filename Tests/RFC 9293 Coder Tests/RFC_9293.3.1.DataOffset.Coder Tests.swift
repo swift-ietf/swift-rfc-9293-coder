@@ -1,7 +1,7 @@
 import Byte
 import Coder
-import Coder_Standard_Library_Integration
-import Cursor_Standard_Library_Integration
+import Coder
+import Cursor
 import Parser
 import RFC_9293
 import RFC_9293_Coder
@@ -28,7 +28,7 @@ struct `RFC_9293.3.1.DataOffset.Coder Tests` {
     @Test
     func `rejects a data offset below five and restores the cursor`() {
         var input = bytes(0x40)[...]
-        #expect(throws: RFC_9293.`3`.`1`.DataOffset.Failure.valueTooSmall) {
+        #expect(throws: RFC_9293.`3`.`1`.DataOffset.Error.valueTooSmall) {
             try RFC_9293.`3`.`1`.DataOffset.coder.parse(&input)
         }
         #expect(input.count == 1)
@@ -37,7 +37,7 @@ struct `RFC_9293.3.1.DataOffset.Coder Tests` {
     @Test
     func `rejects empty input`() {
         var input = bytes()[...]
-        #expect(throws: RFC_9293.`3`.`1`.DataOffset.Failure.insufficientBytes) {
+        #expect(throws: RFC_9293.`3`.`1`.DataOffset.Error.insufficientBytes) {
             try RFC_9293.`3`.`1`.DataOffset.coder.parse(&input)
         }
     }
