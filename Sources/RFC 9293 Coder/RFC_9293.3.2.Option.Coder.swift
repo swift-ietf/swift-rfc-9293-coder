@@ -111,5 +111,3 @@ extension RFC_9293.`3`.`2`.Option {
 
     public static var coder: Coder<ArraySlice<Byte>, [Byte]> { .init() }
 }
-
-extension RFC_9293.`3`.`2`.Option: Coder.Codable {}

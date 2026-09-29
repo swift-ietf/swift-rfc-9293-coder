@@ -39,7 +39,7 @@ struct `RFC_9293.Port.Coder Tests` {
 
     @Test
     func `writes two network-order octets`() throws {
-        #expect(try RFC_9293.Port(8080).encoded() == bytes(0x1F, 0x90))
-        #expect(try RFC_9293.Port.https.encoded() == bytes(0x01, 0xBB))
+        #expect(try RFC_9293.Port.coder.serialize(RFC_9293.Port(8080)) == bytes(0x1F, 0x90))
+        #expect(try RFC_9293.Port.coder.serialize(.https) == bytes(0x01, 0xBB))
     }
 }

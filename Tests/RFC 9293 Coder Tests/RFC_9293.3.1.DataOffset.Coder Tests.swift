@@ -22,7 +22,7 @@ struct `RFC_9293.3.1.DataOffset.Coder Tests` {
 
     @Test
     func `writes the data offset into the high nibble of one octet`() throws {
-        #expect(try RFC_9293.`3`.`1`.DataOffset.maximum.encoded() == bytes(0xF0))
+        #expect(try RFC_9293.`3`.`1`.DataOffset.coder.serialize(.maximum) == bytes(0xF0))
     }
 
     @Test

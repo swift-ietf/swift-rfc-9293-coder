@@ -32,7 +32,7 @@ struct `RFC_9293.SequenceNumber.Coder Tests` {
     @Test
     func `a sequence number survives the round trip`() throws {
         let sequenceNumber = RFC_9293.SequenceNumber(rawValue: 0xDEAD_BEEF)
-        var input = try sequenceNumber.encoded()[...]
+        var input = try RFC_9293.SequenceNumber.coder.serialize(sequenceNumber)[...]
 
         #expect(input == bytes(0xDE, 0xAD, 0xBE, 0xEF)[...])
         #expect(try RFC_9293.SequenceNumber.coder.parse(&input) == sequenceNumber)

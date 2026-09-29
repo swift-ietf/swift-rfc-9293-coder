@@ -27,7 +27,7 @@ struct `RFC_9293.Segment.Coder Tests` {
             data: bytes(0x48, 0x69)
         )
 
-        var input = try segment.encoded()[...]
+        var input = try RFC_9293.Segment.coder.serialize(segment)[...]
 
         #expect(input.count == 22)
         #expect(try RFC_9293.Segment.coder.parse(&input) == segment)

@@ -98,7 +98,7 @@ struct `RFC_9293.3.1.Header.Coder Tests` {
             urgentPointer: 0
         )
 
-        var input = try header.encoded()[...]
+        var input = try RFC_9293.`3`.`1`.Header.coder.serialize(header)[...]
 
         #expect(input.count == 20)
         #expect(try RFC_9293.`3`.`1`.Header.coder.parse(&input) == header)

@@ -19,8 +19,8 @@ struct `RFC_9293.3.1.Flags.Coder Tests` {
 
     @Test
     func `writes the control field as one octet`() throws {
-        #expect(try RFC_9293.`3`.`1`.Flags.synAck.encoded() == bytes(0x12))
-        #expect(try RFC_9293.`3`.`1`.Flags.none.encoded() == bytes(0x00))
+        #expect(try RFC_9293.`3`.`1`.Flags.coder.serialize(.synAck) == bytes(0x12))
+        #expect(try RFC_9293.`3`.`1`.Flags.coder.serialize(.none) == bytes(0x00))
     }
 
     @Test

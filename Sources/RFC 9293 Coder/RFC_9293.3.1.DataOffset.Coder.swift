@@ -36,5 +36,3 @@ extension RFC_9293.`3`.`1`.DataOffset {
 
     public static var coder: Coder<ArraySlice<Byte>, [Byte]> { .init() }
 }
-
-extension RFC_9293.`3`.`1`.DataOffset: Coder.Codable {}
