@@ -1,6 +1,5 @@
 import Byte
 import Coder
-import Coder
 import Cursor
 import Parser
 import RFC_9293
@@ -14,14 +13,26 @@ struct `RFC_9293.3.1.Header.Coder Tests` {
     @Test
     func `reads the twenty octets of a header without options`() throws {
         var input = bytes(
-            0x1F, 0x90,
-            0x00, 0x50,
-            0x00, 0x00, 0x30, 0x39,
-            0x00, 0x00, 0x00, 0x00,
-            0x50, 0x02,
-            0xFF, 0xFF,
-            0x00, 0x00,
-            0x00, 0x00
+            0x1F,
+            0x90,
+            0x00,
+            0x50,
+            0x00,
+            0x00,
+            0x30,
+            0x39,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            0x50,
+            0x02,
+            0xFF,
+            0xFF,
+            0x00,
+            0x00,
+            0x00,
+            0x00
         )[...]
 
         let header = try RFC_9293.`3`.`1`.Header.coder.parse(&input)
@@ -39,15 +50,30 @@ struct `RFC_9293.3.1.Header.Coder Tests` {
     @Test
     func `reads the options the data offset announces`() throws {
         var input = bytes(
-            0x1F, 0x90,
-            0x00, 0x50,
-            0x00, 0x00, 0x30, 0x39,
-            0x00, 0x00, 0x00, 0x00,
-            0x60, 0x02,
-            0xFF, 0xFF,
-            0x00, 0x00,
-            0x00, 0x00,
-            0x02, 0x04, 0x05, 0xB4
+            0x1F,
+            0x90,
+            0x00,
+            0x50,
+            0x00,
+            0x00,
+            0x30,
+            0x39,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            0x60,
+            0x02,
+            0xFF,
+            0xFF,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            0x02,
+            0x04,
+            0x05,
+            0xB4
         )[...]
 
         let header = try RFC_9293.`3`.`1`.Header.coder.parse(&input)
@@ -69,14 +95,26 @@ struct `RFC_9293.3.1.Header.Coder Tests` {
     @Test
     func `rejects a data offset below five and restores the cursor`() {
         var input = bytes(
-            0x1F, 0x90,
-            0x00, 0x50,
-            0x00, 0x00, 0x30, 0x39,
-            0x00, 0x00, 0x00, 0x00,
-            0x40, 0x02,
-            0xFF, 0xFF,
-            0x00, 0x00,
-            0x00, 0x00
+            0x1F,
+            0x90,
+            0x00,
+            0x50,
+            0x00,
+            0x00,
+            0x30,
+            0x39,
+            0x00,
+            0x00,
+            0x00,
+            0x00,
+            0x40,
+            0x02,
+            0xFF,
+            0xFF,
+            0x00,
+            0x00,
+            0x00,
+            0x00
         )[...]
 
         #expect(throws: RFC_9293.`3`.`1`.Header.Error.dataOffsetTooSmall) {
